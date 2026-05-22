@@ -3,6 +3,7 @@ import express, {
   type Request,
   type Response,
 } from "express";
+import { AuthRoutes } from "./modules/auth/auth.route";
 
 const app: Application = express();
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-
+app.use('/api/auth', AuthRoutes);
 
 
 app.get('/', (req: Request, res: Response) => {
