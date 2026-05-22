@@ -15,7 +15,7 @@ export const registerUser = async (userData: Partial<IUser>): Promise<IUser> => 
     throw new Error('Please provide name, email and password');
   }
 
-  // Check unique email
+
   const existingUser = await query('SELECT id FROM users WHERE email = $1', [email]);
   if (existingUser.rowCount && existingUser.rowCount > 0) {
     throw new Error('User with this email already exists');
