@@ -1,3 +1,4 @@
+import { AppError } from "../../utils/AppError";
 import { query } from "../auth/auth.service";
 import type { IIssue, IIssueQueryFilters } from "./issues.interface";
 
@@ -8,13 +9,13 @@ export const createIssue = async (issueData: Partial<IIssue>, reporterId: number
   const { title, description, type } = issueData;
 
   if (!title || title.length > 150) {
-    throw new Error('Title is required and must not exceed 150 characters');
+    throw new AppError(400, 'Title is required and must not exceed 150 characters');
   }
   if (!description || description.length < 20) {
-    throw new Error('Description is required and must be at least 20 characters');
+    throw new AppError(400, 'Description is required and must be at least 20 characters');
   }
   if (type !== 'bug' && type !== 'feature_request') {
-    throw new Error('Type must be either bug or feature_request');
+    throw new AppError(400, 'Type must be either bug or feature_request');
   }
 
   const sql = `
@@ -75,7 +76,7 @@ export const getSingleIssue = async (id: number): Promise<any> => {
   const issueResult = await query(issueSql, [id]);
 
   if (issueResult.rowCount === 0) {
-    throw new Error('Issue not found');
+    throw new AppError(404, 'Issue not found');
   }
 
   const issue = issueResult.rows[0];
@@ -98,7 +99,7 @@ export const updateIssue = async (
   const currentIssueRes = await query(currentIssueSql, [id]);
 
   if (currentIssueRes.rowCount === 0) {
-    throw new Error('Issue not found');
+    throw new AppError(404, 'Issue not found');
   }
 
   const currentIssue = currentIssueRes.rows[0];
@@ -106,10 +107,10 @@ export const updateIssue = async (
   // Business access matrix rule evaluation
   if (userRole !== 'maintainer') {
     if (currentIssue.reporter_id !== userId) {
-      throw new Error('Forbidden: You cannot modify another contributor\'s issue');
+      throw new AppError(403, 'Forbidden: You cannot modify another contributor\'s issue');
     }
     if (currentIssue.status !== 'open') {
-      throw new Error('Conflict: Contributors can only edit issues in open status');
+      throw new AppError(409, 'Conflict: Contributors can only edit issues in open status');
     }
   }
 
@@ -134,7 +135,7 @@ export const deleteIssue = async (id: number): Promise<void> => {
   const checkRes = await query(checkSql, [id]);
 
   if (checkRes.rowCount === 0) {
-    throw new Error('Issue not found');
+    throw new AppError(404, 'Issue not found');
   }
 
   await query('DELETE FROM issues WHERE id = $1', [id]);
