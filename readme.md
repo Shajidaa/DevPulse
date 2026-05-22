@@ -86,7 +86,7 @@ DELETE /api/issues/:id - Permanently remove an issue from the system (Maintainer
 # 1. Installation
 
 Bash
-git clone [https://github.com/yourusername/devpulse.git](https://github.com/yourusername/devpulse.git)
+git clone [https://github.com/Shajidaa/DevPulse](https://github.com/Shajidaa/DevPulse)
 cd devpulse
 npm install
 
