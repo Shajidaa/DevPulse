@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import  config  from "../config";
+import { AppError } from "../utils/AppError";
 
 
 export const pool = new Pool({
@@ -34,8 +35,10 @@ export const initDB = async () => {
 
   
 
-    console.log("Database connected successfully!");
+    // console.log("Database connected successfully!");
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    const err = error as Error;
+  throw new AppError(500, "Database connection failed", err);
   }
 };
