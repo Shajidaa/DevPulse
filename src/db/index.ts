@@ -35,7 +35,7 @@ export const initDB = async () => {
 
   
 
-    // console.log("Database connected successfully!");
+    console.log("Database connected successfully!");
   } catch (error) {
     // console.log(error);
     const err = error as Error;
